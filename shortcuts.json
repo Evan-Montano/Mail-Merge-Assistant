@@ -1,0 +1,18 @@
+{
+  "actions": [
+    {
+      "id": "InsertMergeFieldHotkey",
+      "type": "ExecuteFunction",
+      "name": "Insert Table Start and End"
+    }
+  ],
+  "shortcuts": [
+    {
+      "action": "InsertMergeFieldHotkey",
+      "key": {
+        "default": "Ctrl+Alt+Shift+M",
+        "mac": "Ctrl+Alt+Shift+M"
+      }
+    }
+  ]
+}
