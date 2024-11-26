@@ -10,6 +10,34 @@ Office.onReady((info) => {
   }
 });
 
+
+// Function to get all merge fields
+async function getAllMergefields() {
+  Word.run(async (context) => {
+      // Get all fields in the document
+      const fields = context.document.body.fields;
+      fields.load("items/code");
+
+      await context.sync();
+
+      // Filter for merge fields based on their code
+      const mergeFields = fields.items.filter(field =>
+          field.code.toLowerCase().includes("mergefield")
+      );
+
+      console.log(`Found ${mergeFields.length} merge fields.`);
+
+      mergeFields.forEach((field, index) => {
+          console.log(`Merge Field ${index + 1}: ${field.code}`);
+      });
+
+      return context.sync();
+  }).catch((error) => {
+      console.error("Error in getAllMergefields:", error);
+  });
+}
+
+
 async function insertParagraph(contentToInsert) {
   await Word.run(async (context) => {
       const docBody = context.document.body;
@@ -167,10 +195,6 @@ function insertContentIntoWord(nodeName) {
   });
 }
 
-// ... (other code remains the same)
-
-
-
 function insertTableStartIntoWord(fullPath) {
   Word.run(async (context) => {
     console.log('Inserting TableStart and TableEnd for path:', fullPath);
@@ -192,23 +216,6 @@ function insertTableStartIntoWord(fullPath) {
     console.error('Error inserting TableStart and TableEnd fields:', error);
   });
 }
-
-// function insertContentIntoWord(nodeName) {
-//   Word.run(async (context) => {
-//     console.log('Inserting merge field for node:', nodeName);
-//     const range = context.document.getSelection();
-//     const sanitizedNodeName = nodeName.replace(/[^a-zA-Z0-9_]/g, '');
-//     console.log('Sanitized node name:', sanitizedNodeName);
-//     console.log(`Attempting Insert: ${sanitizedNodeName}`);
-//     //range.insertField(insertFieldFinal, Word.InsertLocation.replace);
-//     range.insertField(Word.InsertLocation.replace, Word.FieldType.mergeField, `@${sanitizedNodeName}`, false);
-//     await context.sync();
-//     console.log('Merge field inserted successfully.');
-//   }).catch(function (error) {
-//     console.error('Error inserting merge field:', error);
-//   });
-// }
-
 
 /** Default helper for invoking an action and handling errors. */
 async function tryCatch(callback) {
